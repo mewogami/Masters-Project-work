@@ -2,7 +2,7 @@
 Competitive Agglomeration Algorithm
 
 Algorithm by:   Hichem Frigui and Raghu Krsihnapuram
-Python Code:    Alain Garcia
+
 """
 
 import numpy as np
