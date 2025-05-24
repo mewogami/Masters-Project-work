@@ -1,0 +1,70 @@
+    clear
+close all
+clc
+format long g
+
+%%
+load('IMDRf_1901_2021.mat');
+IMD=IMDRf_1901_2021;
+
+
+%%
+%Cordinates of India region  
+Cord=xlsread('coordinates_modified.csv');    
+Lat=Cord(:,1);
+Long=Cord(:,2);
+figure();
+scatter(Long,Lat);
+%% 
+
+%Extracting data from IMD to Indian region given by Cord
+disp('India data is loading...')
+count=1;
+L=length(IMD)
+%% 
+
+IMD_India=cell(length(Cord),2);
+for j=1:L
+     if (count<=length(Cord))&&(Cord(count,1)==IMD{j,1}(1,1))&&(Cord(count,2)==IMD{j,1}(1,2))
+       
+           IMD_India{count,1}=IMD{j,1};
+           IMD_India{count,2}=IMD{j,2};
+            count=count+1;
+     end
+end
+
+%Replacing -999 with NaN
+for r=1:length(IMD_India)
+    
+    IMD_India{r,2}(IMD_India{r,2}==-999)=NaN;
+    
+end
+
+%%
+%%Segregating data year wise
+Row_Ind=length(IMD_India);
+Year=(1901:1:2021)';
+L=length(Year);
+RF_2=cell(Row_Ind,2);
+for r=1:Row_Ind
+RF_2{r,1}=IMD_India{r,1};
+fprintf('segregating data yearwise %d/%d\n',r,Row_Ind);
+a=1;
+b=0;
+for i=1:L
+
+if(leapyear(Year(i))==1)
+        n=366;
+ else
+        n=365;
+end
+
+b=b+n;
+RF_2{r,2}{i}= IMD_India{r,2}(a:b,1);
+a=a+n;
+
+end
+end
+%keep('RF');
+save ('RF_2', 'RF_2','-v7.3');
+
